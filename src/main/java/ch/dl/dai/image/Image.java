@@ -22,7 +22,7 @@ public class Image {
         return width;
     }
     public int getHeight() {
-        getHeight();
+        return height;
     }
 
     public Color getPixel(int x, int y) {
