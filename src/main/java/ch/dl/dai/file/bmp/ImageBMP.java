@@ -4,10 +4,7 @@ import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.image.Image;
 
 import java.awt.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 import static java.lang.Math.*;
 
@@ -92,14 +89,14 @@ public class ImageBMP implements ImageFile {
         return null;
     }
 
-    private void writeInt(FileOutputStream out, int value) throws IOException {
+    private void writeInt(BufferedOutputStream out, int value) throws IOException {
         out.write(value & 0xFF);
         out.write((value >> 8) & 0xFF);
         out.write((value >> 16) & 0xFF);
         out.write((value >> 24) & 0xFF);
     }
 
-    private void writeChar(FileOutputStream out, char value) throws IOException {
+    private void writeChar(BufferedOutputStream out, char value) throws IOException {
         out.write(value & 0xFF);
         out.write((value >> 8) & 0xFF);
     }
@@ -112,7 +109,7 @@ public class ImageBMP implements ImageFile {
      */
     @Override
     public void write(String filePath, Image image) {
-        try (FileOutputStream out = new FileOutputStream(filePath)) {
+        try (BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream(filePath))) {
             //compute important info
             final int bitMapHeaderSize = 14;
             final int dibHeaderSize = 40;
