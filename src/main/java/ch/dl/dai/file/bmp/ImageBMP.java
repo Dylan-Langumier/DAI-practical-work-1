@@ -4,36 +4,57 @@ import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.image.Image;
 
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 
 import static java.lang.Math.*;
 
+//main reference : https://en.wikipedia.org/wiki/BMP_file_format
 public class ImageBMP implements ImageFile {
+
+    /**
+     * Reads little endian int from RandomAccessFile and return it as big endian (default for JVM)
+     */
+    private int readInt(RandomAccessFile in) throws IOException {
+        int b0 = in.read();
+        int b1 = in.read();
+        int b2 = in.read();
+        int b3 = in.read();
+        return b0 & 0xFF | (b1 << 8) & 0xFF00 | (b2 << 16) & 0xFF0000 | (b3 << 24) & 0xFF000000;
+    }
+
+    /**
+     * Reads little endian char (2 bytes) and returns it as big endian
+     */
+    private char readChar(RandomAccessFile in) throws IOException {
+        int b0 = in.read();
+        int b1 = in.read();
+        return (char) (b0 & 0xFF | (b1 << 8) & 0xFF00);
+    }
+    
     private Color readRGBA32(RandomAccessFile in) throws IOException {
-        int RGBA32Value = in.readInt();
-        int red = (RGBA32Value >> 24) & 0xFF;
-        int green = (RGBA32Value >> 16) & 0xFF;
-        int blue = (RGBA32Value >> 8) & 0xFF;
-        int alpha = RGBA32Value & 0xFF;
+        int red = in.read();
+        int green = in.read();
+        int blue = in.read();
+        int alpha = in.read();
         return new Color(red, green, blue, alpha);
     }
 
     private Color readRGB24(RandomAccessFile in) throws IOException {
-        int RGB24Value = in.readInt();
-        int red = (RGB24Value >> 16) & 0xFF;
-        int green = (RGB24Value >> 8) & 0xFF;
-        int blue = RGB24Value & 0xFF;
+        int blue = in.read();
+        int green = in.read();
+        int red = in.read();
         return new Color(red, green, blue);
     }
 
     private Color readRGBA16(RandomAccessFile in) throws IOException {
-        int RGBA16Value = in.readInt();
-        int red = (RGBA16Value >> 12) & 0xF;
-        int green = (RGBA16Value >> 8) & 0xF;
-        int blue = (RGBA16Value >> 4) & 0xF;
-        int alpha = RGBA16Value & 0xF;
+        char tmp = readChar(in);
+        int red = (tmp >> 12) & 0xF;
+        int green = (tmp >> 8) & 0xF;
+        int blue = (tmp >> 4) & 0xF;
+        int alpha = tmp & 0xF;
         return new Color(red, green, blue, alpha);
     }
 
@@ -43,31 +64,34 @@ public class ImageBMP implements ImageFile {
         try(RandomAccessFile in = new RandomAccessFile(filePath, "r"))
         {
             //Read BitMap header
-            char fileHeader = in.readChar();
-            int fileSize = in.readInt();
+            char fileHeader = readChar(in);
+            int fileSize = readInt(in);
             in.skipBytes(4);
-            int dataOffset = in.readInt();
+            int dataOffset = readInt(in);
 
             //verifie signature of bitmap file
-            if (fileHeader != 0x4D && fileHeader != 0x4F)
+            if (fileHeader != 0x4D42)
                 throw new IllegalArgumentException("Invalid file format");
 
-            //read DIB header
-            int dibSize = in.readInt();
-            int width = in.readInt();
-            int height = in.readInt();
-            char nbPlanes = in.readChar();
-            char colorDepth = in.readChar();
-            int compressionType = in.readInt();
-            int rawDataSize = in.readInt();
-            int hResolution = in.readInt();
-            int vResolution = in.readInt();
-            int numberOfColors = in.readInt();
-            int numberOfImportantColors = in.readInt();
+            //read DIB BITMAPINFOHEADER (40 bytes)
+            int dibSize = readInt(in);
+            int width = readInt(in);
+            int height = readInt(in);
+            char nbPlanes = readChar(in);
+            char colorDepth = readChar(in);
+            int compressionType = readInt(in);
+            int rawDataSize = readInt(in);
+            int hResolution = readInt(in);
+            int vResolution = readInt(in);
+            int numberOfColors = readInt(in);
+            int numberOfImportantColors = readInt(in);
 
             //verify it and correct it if possible
-            if(dibSize != 40)
-                throw new UnsupportedEncodingException("only supports BITMAPINFOHEADER");
+            if(dibSize < 40)
+                throw new UnsupportedEncodingException("only supports BITMAPINFOHEADER and greater");
+            //skip trough rest of header if necessary
+            if(dibSize > 40)
+                in.skipBytes(dibSize - 40);
             if(nbPlanes != 1)
                 throw new UnsupportedEncodingException("Supports only one color plane");
             if(compressionType != 0)
@@ -75,27 +99,40 @@ public class ImageBMP implements ImageFile {
             if(numberOfColors == 0)
                 numberOfColors = (int)pow(2,colorDepth);
 
-            //let's ignore color palettes for now
-            //since we are allowing only the most basic color tables, we consider 32bpp
-            in.skipBytes(4 * numberOfColors);
+            //deal with inverted images and negative heights
+            boolean isBottumUp = true;
+            if(height < 0){
+                isBottumUp = false;
+                height = abs(height);
+            }
+
+            //let's ignore color palettes for now and jump to the data offset
+            in.seek(dataOffset);
 
             //read pixels (fucking finally...)
             int rowSize = (int)ceil((colorDepth * width) / 32.) * 4;
+            int padding = (rowSize * 8 - colorDepth * width) / 8;
             int pixelArraySize = rowSize * abs(height);
             int numberOfPixels = width * height;
 
             Color[] pixels = new Color[numberOfPixels];
 
-            for(int i = 0; i < numberOfPixels; i++) {
-                ///TODO: read 1
-                ///TODO: read 4
-                pixels[i] = switch (colorDepth){
-                    //color depth 1 - 8 need a color table
-                    case 16 -> readRGBA16(in);
-                    case 24 -> readRGB24(in);
-                    case 32 -> readRGBA32(in);
-                    default -> throw new UnsupportedEncodingException("Unsupported color depth");
-                };
+            int index;
+            for(int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    if(isBottumUp)
+                        index = (height-y-1) * width + x;
+                    else
+                        index = y * width + x;
+                    pixels[index] = switch (colorDepth) {
+                        ///TODO: read 1,2,8 color depth 1 - 8 need a color table
+                        case 16 -> readRGBA16(in);
+                        case 24 -> readRGB24(in);
+                        case 32 -> readRGBA32(in);
+                        default -> throw new UnsupportedEncodingException("Unsupported color depth");
+                    };
+                }
+                in.skipBytes(padding);
             }
 
             return new Image(pixels, width, height);
@@ -108,8 +145,67 @@ public class ImageBMP implements ImageFile {
         return null;
     }
 
+    private void writeInt(FileOutputStream out, int value) throws IOException {
+        out.write(value & 0xFF);
+        out.write((value >> 8) & 0xFF);
+        out.write((value >> 16) & 0xFF);
+        out.write((value >> 24) & 0xFF);
+    }
+
+    private void writeChar(FileOutputStream out, char value) throws IOException {
+        out.write(value & 0xFF);
+        out.write((value >> 8) & 0xFF);
+    }
+
+    /**
+     * Writes image as RGBA on 32 bpp without any compression
+     * @param filePath path to save to
+     * @param image image to save
+     */
     @Override
     public void write(String filePath, Image image) {
+        try(FileOutputStream out = new FileOutputStream(filePath)){
+            //compute important info
+            final int bitMapHeaderSize = 14;
+            final int dibHeaderSize = 40;
+            final int colorTableSize = 0; // not using color tables
+            final int pixelArraySize = image.getWidth() * image.getHeight() * 4; //int (4bytes) per pixel
+            final int fileSize = bitMapHeaderSize + dibHeaderSize + colorTableSize + pixelArraySize;
 
+            //write BitMap header
+            writeChar(out,(char)0x4D42);
+            writeInt(out,fileSize);
+            writeInt(out,0);//reserved 1 and 2
+            writeInt(out,bitMapHeaderSize + dibHeaderSize + colorTableSize); //data offset
+
+            //write dib header
+            writeInt(out,dibHeaderSize);
+            writeInt(out,image.getWidth());
+            writeInt(out,image.getHeight());
+            writeChar(out,(char)1); //planes
+            writeChar(out,(char)32);//color depth
+            writeInt(out,0); //compression
+            writeInt(out,pixelArraySize);
+            writeInt(out,0); //hres
+            writeInt(out,0); //vres
+            writeInt(out,0); // not using color tables
+            writeInt(out,0); // nb of important colors
+
+            //this is where I would write the color table if I cared
+
+            //and now to write the pixel array from bottom-up
+            for(int y = image.getHeight()-1; y >= 0; --y){
+                for(int x = 0; x < image.getWidth(); ++x){
+                    Color pixel = image.getPixel(x, y);
+                    out.write((byte)pixel.getBlue());
+                    out.write((byte)pixel.getGreen());
+                    out.write((byte)pixel.getRed());
+                    out.write((byte)pixel.getAlpha());
+                }
+            }
+
+        }catch (IOException e) {
+            System.out.println("Error writing to file " + filePath + ": " + e);
+        }
     }
 }
