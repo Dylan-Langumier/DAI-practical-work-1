@@ -18,6 +18,12 @@ public class Image {
         this.height = height;
     }
 
+    public Image(Image other){
+        this.pixels = other.pixels.clone();
+        this.width = other.width;
+        this.height = other.height;
+    }
+
     public int getWidth() {
         return width;
     }
