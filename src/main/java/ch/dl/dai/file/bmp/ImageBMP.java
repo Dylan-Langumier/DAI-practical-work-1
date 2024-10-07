@@ -175,9 +175,9 @@ public class ImageBMP implements ImageFile {
     }
 
     private Color readRGBA32(RandomAccessFile in) throws IOException {
-        int red = in.read();
-        int green = in.read();
         int blue = in.read();
+        int green = in.read();
+        int red = in.read();
         int alpha = in.read();
         return new Color(red, green, blue, alpha);
     }
