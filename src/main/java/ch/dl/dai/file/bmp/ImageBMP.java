@@ -55,7 +55,7 @@ public class ImageBMP implements ImageFile {
             //let's ignore color palettes for now and jump to the data offset
             in.seek(dataOffset);
 
-            //read pixels (fucking finally...)
+            //read pixels
             int rowSize = (int) ceil((colorDepth * width) / 32.) * 4;
             int padding = (rowSize * 8 - colorDepth * width) / 8;
             int numberOfPixels = width * height;
@@ -136,7 +136,7 @@ public class ImageBMP implements ImageFile {
             writeInt(out, 0); // not using color tables
             writeInt(out, 0); // nb of important colors
 
-            //this is where I would write the color table if I cared
+            //write color table here (optional)
 
             //and now to write the pixel array from bottom-up
             for (int y = image.getHeight() - 1; y >= 0; --y) {
