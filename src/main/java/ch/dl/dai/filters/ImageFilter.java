@@ -1,5 +1,7 @@
 package ch.dl.dai.filters;
 
+import ch.dl.dai.image.Image;
+
 public interface ImageFilter {
-    void applyFilter();
+    void applyFilter(Image image);
 }
