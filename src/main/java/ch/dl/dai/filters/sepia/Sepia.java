@@ -5,5 +5,5 @@ import ch.dl.dai.image.Image;
 
 public class Sepia implements ImageFilter {
   @Override
-  public void applyFilter(Image image) {}
+  public void applyFilter(Image image, int ...args) {}
 }
