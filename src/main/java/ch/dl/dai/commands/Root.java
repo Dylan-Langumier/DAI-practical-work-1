@@ -19,7 +19,8 @@ public class Root {
     GRAYSCALE,
     MOVING_AVERAGE,
     ALPHA,
-    COLOR_INTENSITY
+    COLOR_INTENSITY,
+    ADJUST_COLOR
   }
 
   public enum SupportedImageType {
