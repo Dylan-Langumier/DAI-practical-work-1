@@ -4,6 +4,7 @@ import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.file.bmp.ImageBMP;
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.filters.alpha.Alpha;
+import ch.dl.dai.filters.colorIntensity.ColorIntensity;
 import ch.dl.dai.filters.grayscale.Grayscale;
 import ch.dl.dai.filters.movingaverage.MovingAverage;
 import ch.dl.dai.filters.sepia.Sepia;
@@ -24,6 +25,7 @@ public class ApplyFilter implements Callable<Integer> {
           case GRAYSCALE -> new Grayscale();
           case MOVING_AVERAGE -> new MovingAverage();
           case ALPHA -> new Alpha();
+          case COLOR_INTENSITY -> new ColorIntensity();
         };
 
     ImageFile file =
