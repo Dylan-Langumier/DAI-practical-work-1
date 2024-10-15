@@ -11,10 +11,7 @@ import java.awt.*;
 public class FilterColorIntensity implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
-    int intensity = 100;
-    if (args.length > 0) {
-      intensity = args[0];
-    }
+    int intensity = args[0];
 
     double intensityFactor = -(intensity - 100) / 100.;
 
