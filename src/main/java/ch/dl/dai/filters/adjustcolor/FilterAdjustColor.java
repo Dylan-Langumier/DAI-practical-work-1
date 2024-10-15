@@ -1,10 +1,10 @@
-package ch.dl.dai.filters.adjustColor;
+package ch.dl.dai.filters.adjustcolor;
 
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
 import java.awt.*;
 
-public class AdjustColor implements ImageFilter {
+public class FilterAdjustColor implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
     Color targetColor;
