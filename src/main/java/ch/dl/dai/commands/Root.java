@@ -11,6 +11,9 @@ import picocli.CommandLine;
     scope = CommandLine.ScopeType.INHERIT,
     mixinStandardHelpOptions = true)
 public class Root {
+
+  static final int MAX_ARG = 4;
+
   public enum AvailableFilter {
     SEPIA,
     GRAYSCALE,
@@ -23,16 +26,24 @@ public class Root {
   }
 
   @CommandLine.Parameters(index = "0", description = "The name of the image file.")
-  protected String filename;
+  String filename;
 
   @CommandLine.Parameters(index = "1", description = "The name of the output image file.")
-  protected String outputFilename;
+  String outputFilename;
+
+  @CommandLine.Parameters(
+      index = "2",
+      description = "Parameters of the filter (the required amount depends on the chosen filter)",
+      arity = "0.." + MAX_ARG,
+      defaultValue = "100",
+      type = int.class)
+  int[] p = new int[MAX_ARG]; // Short name chosen for CLI legibility
 
   @CommandLine.Option(
       names = {"-f", "--filter"},
       description = "The filter to apply on the image (possible values: ${COMPLETION-CANDIDATES}).",
       required = true)
-  protected AvailableFilter filter;
+  AvailableFilter filter;
 
   public SupportedImageType getImageType() throws RuntimeException {
     String fileExtension = filename.substring(filename.lastIndexOf('.') + 1);
@@ -50,5 +61,9 @@ public class Root {
 
   public String getFilename() {
     return filename;
+  }
+
+  public int[] getParameters() {
+    return p;
   }
 }
