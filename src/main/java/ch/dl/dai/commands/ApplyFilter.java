@@ -29,6 +29,9 @@ public class ApplyFilter implements Callable<Integer> {
 
   @Override
   public Integer call() {
+    final int[] pParameters = parent.getParameters();
+    final int nbArgs = getNumberOfArgumentsForCalledFilter();
+
     ImageFilter filter =
         switch (parent.getFilter()) {
           case SEPIA -> new FilterSepia();
@@ -42,14 +45,9 @@ public class ApplyFilter implements Callable<Integer> {
           case BMP -> new ImageBMP();
         };
 
-    final int[] subParameters =
-        Arrays.copyOfRange(parent.getParameters(), 0, getNumberOfArgumentsForCalledFilter());
-    if (parent.getParameters().length > subParameters.length) {
-      final int[] ignoredParameters =
-          Arrays.copyOfRange(
-              parent.getParameters(),
-              getNumberOfArgumentsForCalledFilter(),
-              parent.getParameters().length);
+    final int[] subParameters = Arrays.copyOfRange(pParameters, 0, nbArgs);
+    if (pParameters.length > subParameters.length) {
+      final int[] ignoredParameters = Arrays.copyOfRange(pParameters, nbArgs, pParameters.length);
       System.err.println(
           "\u001B[33m[⚠] "
               + ignoredParameters.length
