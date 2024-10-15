@@ -13,7 +13,8 @@ public class FilterSepia implements ImageFilter {
         int originR = pixel.getRed();
         int originG = pixel.getGreen();
         int originB = pixel.getBlue();
-        // Weighting values were gotten from https://stackoverflow.com/questions/1061093/how-is-a-sepia-tone-created
+        // Weighting values were gotten from
+        // https://stackoverflow.com/questions/1061093/how-is-a-sepia-tone-created
         // Values are not cast into bytes as bytes are signed
         int newR = (int) Math.min((.393 * originR) + (.769 * originG) + (.189 * originB), 255.0);
         int newG = (int) Math.min((.349 * originR) + (.686 * originG) + (.168 * originB), 255.0);

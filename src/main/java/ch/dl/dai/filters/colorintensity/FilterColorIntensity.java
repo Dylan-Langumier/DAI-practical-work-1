@@ -1,15 +1,14 @@
-package ch.dl.dai.filters.colorIntensity;
+package ch.dl.dai.filters.colorintensity;
 
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
 import java.awt.*;
 
 /**
- * This filter allows to modify the color's intensity
- * When augmenting the intensity, distortion artefacts can appear
- * Negative values will invert the colors
+ * This filter allows to modify the color's intensity When augmenting the intensity, distortion
+ * artefacts can appear Negative values will invert the colors
  */
-public class ColorIntensity implements ImageFilter {
+public class FilterColorIntensity implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
     int intensity = 100;
