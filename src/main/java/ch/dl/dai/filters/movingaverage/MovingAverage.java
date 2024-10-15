@@ -8,13 +8,12 @@ public class MovingAverage implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
     int squareSize = 3;
-    if(args.length > 0)
-      squareSize = args[0];
+    if (args.length > 0) squareSize = args[0];
 
     Image referenceCopy = new Image(image);
     for (int x = 0; x < image.getWidth(); ++x) {
       for (int y = 0; y < image.getHeight(); ++y) {
-        image.setPixel(x, y, average(referenceCopy, x, y,squareSize));
+        image.setPixel(x, y, average(referenceCopy, x, y, squareSize));
       }
     }
   }

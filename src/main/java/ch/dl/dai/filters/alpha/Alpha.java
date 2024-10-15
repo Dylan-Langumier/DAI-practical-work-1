@@ -5,5 +5,5 @@ import ch.dl.dai.image.Image;
 
 public class Alpha implements ImageFilter {
   @Override
-  public void applyFilter(Image image, int ...args) {}
+  public void applyFilter(Image image, int... args) {}
 }

@@ -32,7 +32,7 @@ public class ApplyFilter implements Callable<Integer> {
         };
 
     Image image = file.open(parent.getFilename());
-    filter.applyFilter(image);
+    filter.applyFilter(image, parent.getParameters());
     file.write(parent.getOutputFilename(), image);
 
     return 0;

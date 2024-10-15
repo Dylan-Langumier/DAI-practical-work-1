@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="temurin-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="ch.dl.dai.Main" />
-    <module name="dai-pratical-work" />
+    <module name="DAI-filters" />
     <option name="PROGRAM_PARAMETERS" value="--help" />
     <method v="2">
       <option name="Make" enabled="true" />
