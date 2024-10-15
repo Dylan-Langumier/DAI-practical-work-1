@@ -4,7 +4,7 @@ import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
 import java.awt.Color;
 
-public class MovingAverage implements ImageFilter {
+public class FilterMovingAverage implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
     int squareSize = 3;

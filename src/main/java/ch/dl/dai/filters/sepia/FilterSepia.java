@@ -1,9 +1,9 @@
-package ch.dl.dai.filters.alpha;
+package ch.dl.dai.filters.sepia;
 
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
 
-public class Alpha implements ImageFilter {
+public class FilterSepia implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {}
 }

@@ -4,7 +4,7 @@ import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
 import java.awt.Color;
 
-public class Grayscale implements ImageFilter {
+public class FilterGrayscale implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
     int intensity = Math.clamp(args[0], 0, 100);
