@@ -3,12 +3,12 @@ package ch.dl.dai.commands;
 import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.file.bmp.ImageBMP;
 import ch.dl.dai.filters.ImageFilter;
-import ch.dl.dai.filters.alpha.Alpha;
-import ch.dl.dai.filters.colorIntensity.ColorIntensity;
-import ch.dl.dai.filters.grayscale.Grayscale;
-import ch.dl.dai.filters.movingaverage.MovingAverage;
-import ch.dl.dai.filters.sepia.Sepia;
+import ch.dl.dai.filters.alpha.FilterAlpha;
+import ch.dl.dai.filters.grayscale.FilterGrayscale;
+import ch.dl.dai.filters.movingaverage.FilterMovingAverage;
+import ch.dl.dai.filters.sepia.FilterSepia;
 import ch.dl.dai.image.Image;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 
@@ -16,16 +16,28 @@ import picocli.CommandLine;
 public class ApplyFilter implements Callable<Integer> {
   @CommandLine.ParentCommand protected Root parent;
 
+  public int getNumberOfArgumentsForCalledFilter() {
+    switch (parent.getFilter()) {
+      case GRAYSCALE, MOVING_AVERAGE, ALPHA -> {
+        return 1;
+      }
+      default -> { // Includes Sepia
+        return 0;
+      }
+    }
+  }
+
   @Override
   public Integer call() {
+    final int[] pParameters = parent.getParameters();
+    final int nbArgs = getNumberOfArgumentsForCalledFilter();
+
     ImageFilter filter =
         switch (parent.getFilter()) {
-            // TODO: Refactor into xFilter instead of just x
-          case SEPIA -> new Sepia();
-          case GRAYSCALE -> new Grayscale();
-          case MOVING_AVERAGE -> new MovingAverage();
-          case ALPHA -> new Alpha();
-          case COLOR_INTENSITY -> new ColorIntensity();
+          case SEPIA -> new FilterSepia();
+          case GRAYSCALE -> new FilterGrayscale();
+          case MOVING_AVERAGE -> new FilterMovingAverage();
+          case ALPHA -> new FilterAlpha();
         };
 
     ImageFile file =
@@ -33,8 +45,19 @@ public class ApplyFilter implements Callable<Integer> {
           case BMP -> new ImageBMP();
         };
 
+    final int[] subParameters = Arrays.copyOfRange(pParameters, 0, nbArgs);
+    if (pParameters.length > subParameters.length) {
+      final int[] ignoredParameters = Arrays.copyOfRange(pParameters, nbArgs, pParameters.length);
+      System.err.println(
+          "\u001B[33m[⚠] "
+              + ignoredParameters.length
+              + " parameter"
+              + (ignoredParameters.length > 1 ? "s were" : " was")
+              + " ignored: "
+              + Arrays.toString(ignoredParameters));
+    }
     Image image = file.open(parent.getFilename());
-    filter.applyFilter(image);
+    filter.applyFilter(image, subParameters);
     file.write(parent.getOutputFilename(), image);
 
     return 0;
