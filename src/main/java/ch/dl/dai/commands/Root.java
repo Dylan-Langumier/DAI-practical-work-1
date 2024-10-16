@@ -18,7 +18,6 @@ public class Root {
     SEPIA,
     GRAYSCALE,
     MOVING_AVERAGE,
-    ALPHA,
     COLOR_INTENSITY
   }
 
