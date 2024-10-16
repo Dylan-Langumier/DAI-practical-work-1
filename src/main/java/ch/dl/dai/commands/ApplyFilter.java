@@ -4,7 +4,6 @@ import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.file.bmp.ImageBMP;
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.filters.adjustcolor.FilterAdjustColor;
-import ch.dl.dai.filters.alpha.FilterAlpha;
 import ch.dl.dai.filters.colorintensity.FilterColorIntensity;
 import ch.dl.dai.filters.grayscale.FilterGrayscale;
 import ch.dl.dai.filters.movingaverage.FilterMovingAverage;
@@ -20,7 +19,7 @@ public class ApplyFilter implements Callable<Integer> {
 
   public int getNumberOfArgumentsForCalledFilter() {
     switch (parent.getFilter()) {
-      case GRAYSCALE, MOVING_AVERAGE, ALPHA, COLOR_INTENSITY -> {
+      case GRAYSCALE, MOVING_AVERAGE, COLOR_INTENSITY -> {
         return 1;
       }
       case ADJUST_COLOR -> {
@@ -42,7 +41,6 @@ public class ApplyFilter implements Callable<Integer> {
           case SEPIA -> new FilterSepia();
           case GRAYSCALE -> new FilterGrayscale();
           case MOVING_AVERAGE -> new FilterMovingAverage();
-          case ALPHA -> new FilterAlpha();
           case COLOR_INTENSITY -> new FilterColorIntensity();
           case ADJUST_COLOR -> new FilterAdjustColor();
         };
