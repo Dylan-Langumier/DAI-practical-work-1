@@ -42,9 +42,11 @@ style: |
 headingDivider: 4
 -->
 
-[base_image]:test_images/desert.bmp
-[image_200_color]:test_images/desert_200_color.bmp
-[image_red]:test_images/desert_red.bmp
+[base]:test_images/desert.bmp
+[grey]:test_images/grey_desert.bmp
+[colorful]:test_images/desert_200_color.bmp
+[red]:test_images/desert_red.bmp
+[sepia]:test_images/sepia_desert.bmp
 
 # Presentation of DAI project : BIM
 <!--
@@ -52,7 +54,9 @@ _class: lead
 _paginate: false
 -->
 
-<small>Dylan Langumier & Raphael Perret</small>
+![bg opacity:10%][grey]
+
+Dylan Langumier & Raphael Perret
 
 ## Our project
 
@@ -60,14 +64,35 @@ _paginate: false
 - applies a variety of filters with many parameters
 - simple CLI tool
 
-## Example 1
+![bg right:40%][colorful]
 
-java -jar target/DAI-filters-1.0-SNAPSHOT.jar -f COLOR_INTENSITY **test_images/desert.bmp test_images/desert_200_color.bmp** __200__ apply
-![base_image]
-![image_200_color]
+## Example 1
+```
+java -jar target/DAI-filters-1.0-SNAPSHOT.jar
+ -f COLOR_INTENSITY test_images/desert.bmp 
+ test_images/desert_200_color.bmp 200 apply
+```
+
+**Filter** : COLOR_INTENSITY  
+
+**Intensity** : 200%  
+
+![bg vertical][base]
+![bg right:60%][colorful]
 
 ## Example 2
-1. ADJUST_COLOR 150 20 20 250  
-2. MOVING_AVERAGE 2  
-![base_image]
-![image_red]
+Two filters applied:
+1. **Adjust color** 150 20 20 250  
+2. **Moving average**, size 2  
+![bg vertical][base]
+![bg right:60%][red]
+
+## Code
+- commands : picocli stuff
+- file : image file read/write
+- filters
+- image : the simple representation used troughout our project
+
+file and filter are actually interfaces with different implementations. This is redundant for file image since we only implemented bitmap.
+
+![bg right:40%][sepia]
