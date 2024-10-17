@@ -69,7 +69,6 @@ public class ImageBMP implements ImageFile {
           else index = y * width + x;
           pixels[index] =
               switch (colorDepth) {
-                  /// TODO: read 1,2,8 color depth 1 - 8 need a color table
                 case 16 -> readRGBA16(in);
                 case 24 -> readRGB24(in);
                 case 32 -> readRGBA32(in);
