@@ -31,6 +31,6 @@ public class FilterAdjustColor implements ImageFilter {
 
   int adjustIntensity(int original, int desired, double intensityFactor) {
     int result = original + (int) ((desired - original) * intensityFactor);
-    return Math.clamp(result, 0, 255)
+    return Math.clamp(result, 0, 255);
   }
 }
