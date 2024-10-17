@@ -34,7 +34,12 @@ public class ApplyFilter implements Callable<Integer> {
   @Override
   public Integer call() {
     final int[] pParameters = parent.getParameters();
+    if (pParameters == null) throw new RuntimeException("No argument provided");
+
     final int nbArgs = getNumberOfArgumentsForCalledFilter();
+    if (pParameters.length < nbArgs)
+      throw new RuntimeException(
+          "Too few arguments provided. (Got: " + pParameters.length + ", expected " + nbArgs + ")");
 
     ImageFilter filter =
         switch (parent.getFilter()) {
@@ -59,7 +64,8 @@ public class ApplyFilter implements Callable<Integer> {
               + " parameter"
               + (ignoredParameters.length > 1 ? "s were" : " was")
               + " ignored: "
-              + Arrays.toString(ignoredParameters));
+              + Arrays.toString(ignoredParameters)
+              + "\u001B[0m");
     }
     Image image = file.open(parent.getFilepath());
     filter.applyFilter(image, subParameters);

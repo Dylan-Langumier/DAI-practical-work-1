@@ -36,7 +36,8 @@ public class Root {
       index = "2",
       description = "Parameters of the filter (the required amount depends on the chosen filter)",
       arity = "0.." + MAX_ARG,
-      defaultValue = "100",
+      defaultValue = CommandLine.Parameters.NULL_VALUE,
+      hideParamSyntax = true,
       type = int.class)
   int[] p = new int[MAX_ARG]; // Short name chosen for CLI legibility
 
