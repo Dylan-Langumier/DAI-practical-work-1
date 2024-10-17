@@ -61,9 +61,9 @@ public class ApplyFilter implements Callable<Integer> {
               + " ignored: "
               + Arrays.toString(ignoredParameters));
     }
-    Image image = file.open(parent.getFilename());
+    Image image = file.open(parent.getFilepath());
     filter.applyFilter(image, subParameters);
-    file.write(parent.getOutputFilename(), image);
+    file.write(parent.getOutputFilepath(), image);
 
     return 0;
   }

@@ -26,11 +26,11 @@ public class Root {
     BMP,
   }
 
-  @CommandLine.Parameters(index = "0", description = "The name of the image file.")
-  String filename;
+  @CommandLine.Parameters(index = "0", description = "The file path of the image.")
+  String filepath;
 
-  @CommandLine.Parameters(index = "1", description = "The name of the output image file.")
-  String outputFilename;
+  @CommandLine.Parameters(index = "1", description = "The file path of the output image.")
+  String outputFilepath;
 
   @CommandLine.Parameters(
       index = "2",
@@ -47,21 +47,21 @@ public class Root {
   AvailableFilter filter;
 
   public SupportedImageType getImageType() throws RuntimeException {
-    String fileExtension = filename.substring(filename.lastIndexOf('.') + 1);
+    String fileExtension = filepath.substring(filepath.lastIndexOf('.') + 1);
     if (fileExtension.equalsIgnoreCase("bmp")) return SupportedImageType.BMP;
     else throw new RuntimeException("Unsupported file (" + fileExtension.toUpperCase() + ").");
   }
 
-  public String getOutputFilename() {
-    return outputFilename;
+  public String getOutputFilepath() {
+    return outputFilepath;
   }
 
   public AvailableFilter getFilter() {
     return filter;
   }
 
-  public String getFilename() {
-    return filename;
+  public String getFilepath() {
+    return filepath;
   }
 
   public int[] getParameters() {
