@@ -10,9 +10,7 @@ public class FilterAdjustColor implements ImageFilter {
     Color targetColor;
     int intensity;
     if (args.length < 4) {
-      /// TODO : once we get values as arguments throw an error
-      targetColor = new Color(70, 180, 50);
-      intensity = -25;
+      throw new IllegalArgumentException("Not enough arguments");
     } else {
       targetColor = new Color(args[0], args[1], args[2]);
       intensity = args[3];
