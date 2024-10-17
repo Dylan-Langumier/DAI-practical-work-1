@@ -7,8 +7,7 @@ import java.awt.Color;
 public class FilterMovingAverage implements ImageFilter {
   @Override
   public void applyFilter(Image image, int... args) {
-    int squareSize = 3;
-    if (args.length > 0) squareSize = args[0];
+    int squareSize = Math.clamp(args[0], 1, Integer.MAX_VALUE);
 
     Image referenceCopy = new Image(image);
     for (int x = 0; x < image.getWidth(); ++x) {
