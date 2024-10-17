@@ -15,7 +15,7 @@ This is a small CLI application allowing you to apply some basic filters on top 
 - color intensity (1 argument)
 - color adjusting (4 arguments)
 
-## Pre-requisite
+## Prerequisite
 This application was built against Java 21, and thus requires Java 21+ to run.
 
 ### Supported file format
@@ -53,12 +53,19 @@ If you do not have Maven, we included a Maven Wrapper, which you can use to buil
 ```bash
 ./mvnw dependency:go-offline clean compile package
 ```
+
+## Standalone
+Alternatively, we provide the JAR file on its own which you can use as long as you have Java 21+ installed as mentioned in the [Prerequisite](#prerequisite) section.  
+The archive file includes a few the same test files that are present in the [test_images](./test_images/) directory.
+
 --- 
 # Get started
+All the commands assume the terminal was opened in the root folder of the code or the archive given through the [standalone](#standalone) version.
+
 ## Help
 To run the application, you can start with the basic help command
 ```bash
-java -jar ./target/BIM-1.0.jar --help
+java -jar ./BIM-1.0.jar --help
 ```
 ```
 Usage: BIM-1.0.jar [-hV] -f=<filter> <filepath> <outputFilepath> <p> [COMMAND]
@@ -83,7 +90,7 @@ We included some BMP files you can test the application on.
 This converts an image to grayscale by averaging each pixel's RGB values, with an intensity factor controlling how strong the grayscale effect is.  
 The intensity can be set between 0 (turns the image black) and 100 (full grayscale)
 ```bash
-java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-gray.bmp -f grayscale <intensity> apply
+java -jar ./BIM-1.0.jar ./../test_images/desert.bmp ./../test_images/desert-gray.bmp -f grayscale <intensity> apply
 ```
 <img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
 <img style="display:inline-block" src="readme/desert-to-gray.bmp" height="200" title="Image of a desert gray scaled with an intensity of 40" alt="Image of a desert gray scaled with an intensity of 40">
@@ -94,7 +101,7 @@ It applies a [sepia](https://en.wikipedia.org/wiki/Sepia_(color)) tone effect to
 This filter transforms the image to give it a warm, brownish tint, emulating an antique photo effect
 
 ```bash
-java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-sepia.bmp -f sepia apply
+java -jar ./BIM-1.0.jar ./../test_images/desert.bmp ./../test_images/desert-sepia.bmp -f sepia apply
 ```
 
 <img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
@@ -107,7 +114,7 @@ Each pixel's color is replaced by the average color of neighboring pixels, creat
 Note: the stronger the intensity, the longer you will need to wait to get an output.
 
 ```bash
-java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-mv_avg.bmp -f moving_average <intensity> apply
+java -jar ./BIM-1.0.jar ./../test_images/desert.bmp ./../test_images/desert-mv_avg.bmp -f moving_average <intensity> apply
 ```
 
 <img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
@@ -118,7 +125,7 @@ java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-mv_
 This filter adjusts the intensity of colors in an image, either enhancing or reducing them based on the input value.  
 Positive values increase intensity, while negative values invert colors.
 ```bash
-java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-color.bmp -f color_intensity <intensity> apply
+java -jar ./BIM-1.0.jar ./../test_images/desert.bmp ./../test_images/desert-color.bmp -f color_intensity <intensity> apply
 ```
 <img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
 <img style="display:inline-block" src="readme/desert-intense.bmp" height="200" title="Image of a desert with intense colors" alt="Image of a desert with intense colors">
@@ -129,7 +136,7 @@ This is an image filter that adjusts the colors of an image towards a target col
 It takes four arguments: the target color's RGB values and an intensity percentage.  
 It then modifies each pixel of the image by blending the original color with the target color according to the intensity level.
 ```bash
-java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-adjusted.bmp -f adjust_color <r> <g> <b> <intesity> apply
+java -jar ./BIM-1.0.jar ./../test_images/desert.bmp ./../test_images/desert-adjusted.bmp -f adjust_color <r> <g> <b> <intesity> apply
 ```
 
 <img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
