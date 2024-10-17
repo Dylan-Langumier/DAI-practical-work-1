@@ -2,7 +2,7 @@ package ch.dl.dai.filters.adjustcolor;
 
 import ch.dl.dai.filters.ImageFilter;
 import ch.dl.dai.image.Image;
-import java.awt.*;
+import java.awt.Color;
 
 public class FilterAdjustColor implements ImageFilter {
   @Override
