@@ -35,7 +35,7 @@ and then unzipping in into a directory.
 # How to build
 ## From Intellij IDEA
 
-<img style="display:inline" src="readme/package_as_jar.png" height="234" alt="Image description">
+<img style="display:inline" src="readme/package_as_jar.png" height="234" title="Configuration dropdown in Intellij IDEA" alt="Configuration dropdown in Intellij IDEA">
 
 
 Select `Package application as JAR file`, and run the configuration. This will output the JAR file in the [target](./target) folder.
@@ -61,7 +61,7 @@ To run the application, you can start with the basic help command
 java -jar ./target/BIM-1.0.jar --help
 ```
 ```
-Usage: classes [-hV] -f=<filter> <filepath> <outputFilepath> <p> [COMMAND]
+Usage: BIM-1.0.jar [-hV] -f=<filter> <filepath> <outputFilepath> <p> [COMMAND]
 CLI to apply basic filters on images
       <filepath>          The file path of the image.
       <outputFilepath>    The file path of the output image.
@@ -85,8 +85,8 @@ The intensity can be set between 0 (turns the image black) and 100 (full graysca
 ```bash
 java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-gray.bmp -f grayscale <intensity> apply
 ```
-<img style="display:inline-block" src="readme/desert.bmp" height="200" alt="Image of a desert">
-<img style="display:inline-block" src="readme/desert-to-gray.bmp" height="200" alt="Image of a desert gray scaled with an intensity of 40">
+<img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
+<img style="display:inline-block" src="readme/desert-to-gray.bmp" height="200" title="Image of a desert gray scaled with an intensity of 40" alt="Image of a desert gray scaled with an intensity of 40">
 
 ## Sepia
 This filter does not take any extra parameter, as it was deemed irrelevant for it.  
@@ -97,8 +97,8 @@ This filter transforms the image to give it a warm, brownish tint, emulating an 
 java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-sepia.bmp -f sepia apply
 ```
 
-<img style="display:inline-block" src="readme/desert.bmp" height="200" alt="Image of a desert">
-<img style="display:inline-block" src="readme/desert-to-sepia.bmp" height="200" alt="Image of a desert with a sepia-tone">
+<img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
+<img style="display:inline-block" src="readme/desert-to-sepia.bmp" height="200" title="Image of a desert with a sepia-tone" alt="Image of a desert with a sepia-tone">
 
 ## Moving Average
 This applies a moving average filter to an image, smoothing pixel colors by averaging the RGB values of surrounding pixels within a defined square area.  
@@ -110,8 +110,8 @@ Note: the stronger the intensity, the longer you will need to wait to get an out
 java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-mv_avg.bmp -f moving_average <intensity> apply
 ```
 
-<img style="display:inline-block" src="readme/desert.bmp" height="200" alt="Image of a desert">
-<img style="display:inline-block" src="readme/desert-blurred.bmp" height="200" alt="Blurred image of a desert">
+<img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
+<img style="display:inline-block" src="readme/desert-blurred.bmp" height="200" title="Blurred image of a desert" alt="Blurred image of a desert">
 
 ## Play with colors
 ### Color Intensity
@@ -120,9 +120,9 @@ Positive values increase intensity, while negative values invert colors.
 ```bash
 java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-color.bmp -f color_intensity <intensity> apply
 ```
-<img style="display:inline-block" src="readme/desert.bmp" height="200" alt="Image of a desert">
-<img style="display:inline-block" src="readme/desert-intense.bmp" height="200" alt="Image of a desert with intense colors">
-<img style="display:inline-block" src="readme/desert-not-intense.bmp" height="200" alt="Image of a desert with negative colors">
+<img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
+<img style="display:inline-block" src="readme/desert-intense.bmp" height="200" title="Image of a desert with intense colors" alt="Image of a desert with intense colors">
+<img style="display:inline-block" src="readme/desert-not-intense.bmp" height="200" title="Image of a desert with negative colors" alt="Image of a desert with negative colors">
 
 ### Adjust color
 This is an image filter that adjusts the colors of an image towards a target color based on a specified intensity.  
@@ -132,8 +132,8 @@ It then modifies each pixel of the image by blending the original color with the
 java -jar ./target/BIM-1.0.jar ./test_images/desert.bmp ./test_images/desert-adjusted.bmp -f adjust_color <r> <g> <b> <intesity> apply
 ```
 
-<img style="display:inline-block" src="readme/desert.bmp" height="200" alt="Image of a desert">
-<img style="display:inline-block" src="readme/desert-adjusted.bmp" height="200" alt="Image of a desert with an indigo color filter">
+<img style="display:inline-block" src="readme/desert.bmp" height="200" title="Image of a desert" alt="Image of a desert">
+<img style="display:inline-block" src="readme/desert-adjusted.bmp" height="200" title="Image of a desert with an indigo color filter" alt="Image of a desert with an indigo color filter">
 
 --- 
 
