@@ -47,6 +47,9 @@ headingDivider: 4
 [colorful]:test_images/desert_200_color.bmp
 [red]:test_images/desert_red.bmp
 [sepia]:test_images/sepia_desert.bmp
+[yellow]:test_images/yellow_vineyard.bmp
+
+[README]:https://github.com/Dylan-Langumier/DAI-practical-work-1/blob/master/README.md
 
 # Presentation of DAI project : BIM
 <!--
@@ -64,13 +67,39 @@ Dylan Langumier & Raphael Perret
 - applies a variety of filters with many parameters
 - simple CLI tool
 
+\
+More detailed explanations in the project [README].
+
 ![bg right:40%][colorful]
 
-## Example 1
+## Usage
+
+```bash
+java -jar target/BIM-1.0.jar -f <filter> <input> <output> <args> apply
 ```
-java -jar target/DAI-filters-1.0-SNAPSHOT.jar
- -f COLOR_INTENSITY test_images/desert.bmp 
- test_images/desert_200_color.bmp 200 apply
+
+**Filter and arguments**
+- GRAYSCALE : luminosity
+- SEPIA : no arguments
+- COLOR_INTENSITY : intensity [%]
+- ADJUST_COLOR : red, green, blue, intensity
+- MOVING_AVERAGE : size of the averaged square
+
+## Usage
+
+```bash
+java -jar target/BIM-1.0.jar -f <filter> <input> <output> <args> apply
+```
+
+**input**
+The input image file. Format is detected with extension, and it will only open suported formats (only bmp)
+
+**output**
+The output file. Creates a new file or overwrites an existing one. Exports with same format as input file.
+
+## Example 1
+```bash
+java -jar target/BIM-1.0.jar -f COLOR_INTENSITY test_images/desert.bmp test_images/desert_200_color.bmp 200 apply 
 ```
 
 **Filter** : COLOR_INTENSITY  
@@ -86,6 +115,15 @@ Two filters applied:
 2. **Moving average**, size 2  
 ![bg vertical][base]
 ![bg right:60%][red]
+
+## Code
+**Dependencies**
+- [picocli](https://picocli.info/)
+- [java color](https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html)
+- [java io](https://docs.oracle.com/javase/8/docs/api/java/io/package-summary.html)
+- [java math](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html)
+
+![bg right:60%][yellow]
 
 ## Code
 - commands : picocli stuff
