@@ -21,9 +21,22 @@ This application was built against Java 21, and thus requires Java 21+ to run.
 ### Supported file format
 Due to the lack of time we've had, we are only supporting bitmap whose headers are `BITMAPINFOHEADER`.
 
+# Get the files locally
+## Clone
+First you will need to clone the application using Git
+```bash
+git clone https://github.com/Dylan-Langumier/DAI-practical-work-1.git
+```
+
+## Download source code
+Or by downloading the [source code](https://github.com/Dylan-Langumier/DAI-practical-work-1/archive/refs/heads/master.zip)
+and then unzipping in into a directory.
+
 # How to build
 ## From Intellij IDEA
-![img][package]
+
+<img style="display:inline" src="readme/package_as_jar.png" height="234" alt="Image description">
+
 
 Select `Package application as JAR file`, and run the configuration. This will output the JAR file in the [target](./target) folder.
 
