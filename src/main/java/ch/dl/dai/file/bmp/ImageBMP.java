@@ -4,7 +4,7 @@ import static java.lang.Math.*;
 
 import ch.dl.dai.file.ImageFile;
 import ch.dl.dai.image.Image;
-import java.awt.*;
+import java.awt.Color;
 import java.io.*;
 
 // main reference : https://en.wikipedia.org/wiki/BMP_file_format
@@ -13,11 +13,12 @@ public class ImageBMP implements ImageFile {
   @Override
   public Image open(String filePath) {
 
-    try (RandomAccessFile in = new RandomAccessFile(filePath, "r")) {
+    try (FileInputStream fis = new FileInputStream(filePath);
+        BufferedInputStream in = new BufferedInputStream(fis)) {
       // Read BitMap header
       char fileHeader = readChar(in);
-      in.skipBytes(4); // fileSize
-      in.skipBytes(4); // reserved 1 & 2
+      in.skip(4); // fileSize
+      in.skip(4); // reserved 1 & 2
       int dataOffset = readInt(in);
 
       // verifie signature of bitmap file
@@ -30,14 +31,15 @@ public class ImageBMP implements ImageFile {
       char nbPlanes = readChar(in);
       char colorDepth = readChar(in);
       int compressionType = readInt(in);
-      in.skipBytes(5 * 4); // rawDataSize, h and v resolution, numberOfColor and number of important
-      // colors, 5 * int
+      in.skip(3 * 4); // rawDataSize, h and v resolution
+      int numberOfColors = readInt(in);
+      in.skip(4); // number of important colors
 
       // verify it and correct it if possible
       if (dibSize < 40)
         throw new UnsupportedEncodingException("only supports BITMAPINFOHEADER and greater");
       // skip trough rest of header if necessary
-      if (dibSize > 40) in.skipBytes(dibSize - 40);
+      if (dibSize > 40) in.skip(dibSize - 40);
       if (nbPlanes != 1) throw new UnsupportedEncodingException("Supports only one color plane");
       if (compressionType != 0)
         throw new UnsupportedEncodingException("Doesn't support compression");
@@ -50,7 +52,8 @@ public class ImageBMP implements ImageFile {
       }
 
       // let's ignore color palettes for now and jump to the data offset
-      in.seek(dataOffset);
+      if (colorDepth <= 8) // color table is present
+      in.skip(numberOfColors);
 
       // read pixels
       int rowSize = (int) ceil((colorDepth * width) / 32.) * 4;
@@ -73,7 +76,7 @@ public class ImageBMP implements ImageFile {
                 default -> throw new UnsupportedEncodingException("Unsupported color depth");
               };
         }
-        in.skipBytes(padding);
+        in.skip(padding);
       }
 
       return new Image(pixels, width, height);
@@ -150,8 +153,10 @@ public class ImageBMP implements ImageFile {
     }
   }
 
-  /** Reads little endian int from RandomAccessFile and return it as big endian (default for JVM) */
-  private int readInt(RandomAccessFile in) throws IOException {
+  /**
+   * Reads little endian int from BufferedInputStream and return it as big endian (default for JVM)
+   */
+  private int readInt(BufferedInputStream in) throws IOException {
     int b0 = in.read();
     int b1 = in.read();
     int b2 = in.read();
@@ -160,13 +165,13 @@ public class ImageBMP implements ImageFile {
   }
 
   /** Reads little endian char (2 bytes) and returns it as big endian */
-  private char readChar(RandomAccessFile in) throws IOException {
+  private char readChar(BufferedInputStream in) throws IOException {
     int b0 = in.read();
     int b1 = in.read();
     return (char) (b0 & 0xFF | (b1 << 8) & 0xFF00);
   }
 
-  private Color readRGBA32(RandomAccessFile in) throws IOException {
+  private Color readRGBA32(BufferedInputStream in) throws IOException {
     int blue = in.read();
     int green = in.read();
     int red = in.read();
@@ -174,14 +179,14 @@ public class ImageBMP implements ImageFile {
     return new Color(red, green, blue, alpha);
   }
 
-  private Color readRGB24(RandomAccessFile in) throws IOException {
+  private Color readRGB24(BufferedInputStream in) throws IOException {
     int blue = in.read();
     int green = in.read();
     int red = in.read();
     return new Color(red, green, blue);
   }
 
-  private Color readRGBA16(RandomAccessFile in) throws IOException {
+  private Color readRGBA16(BufferedInputStream in) throws IOException {
     char tmp = readChar(in);
     int red = (tmp >> 12) & 0xF;
     int green = (tmp >> 8) & 0xF;
