@@ -18,7 +18,8 @@ public class Root {
     SEPIA,
     GRAYSCALE,
     MOVING_AVERAGE,
-    COLOR_INTENSITY
+    COLOR_INTENSITY,
+    ADJUST_COLOR
   }
 
   public enum SupportedImageType {
